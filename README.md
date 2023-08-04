@@ -24,7 +24,7 @@ Siga este passo-a-passo, para ter um ambiente de desenvolvimento em execução.
 
 ```
 1. Efetue o clone do projeto, utilizando seu terminal:
-    git clone git remote add origin git@github.com:ElessandroPrestes/social-network-feed.git
+    git clone  git@github.com:ElessandroPrestes/social-network-feed.git
 
 2. Acesse a pasta do projeto clonado:
     social-network-feed
