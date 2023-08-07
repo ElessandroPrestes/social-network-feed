@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use App\Repositories\PostRepository;
 use App\Services\PostService;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
@@ -31,6 +32,21 @@ class PostRepositoryTest extends TestCase
                 PostRepositoryInterface::class,
                 $this->postRepository
         );
+    }
+
+    /**
+     * @test
+     */
+    public function create_post_exception()
+    {
+        $this->expectException(QueryException::class);
+
+        $post = [
+            'image' => 'test.png',
+        ];
+
+        $this->postRepository->createPost($post);
+        
     }
     /**
      * @test
@@ -71,7 +87,7 @@ class PostRepositoryTest extends TestCase
 
         $post3  = Post::factory()->create(['created_at' => now()]);
 
-        $posts = $this->postRepository->getAllPosts();
+        $posts = $this->postRepository->getAllPostsDesc();
 
         $this->assertCount(3, $posts);
 
@@ -81,5 +97,17 @@ class PostRepositoryTest extends TestCase
 
         $this->assertEquals($post1->id, $posts[2]->id);
     }
+
+     /**
+      * @test
+      */
+      public function get_post_by_id()
+      {
+          $post = Post::factory()->create();
+  
+          $response = $this->postRepository->getPostById($post->id);
+  
+          $this->assertIsObject($response);
+      }
    
 }

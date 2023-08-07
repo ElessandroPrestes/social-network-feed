@@ -46,7 +46,7 @@ class PostController extends Controller
      * 
      *      )
      *
-     *@return BrandResource[]
+     *@return PostResource[]
      */
     public function index()
     {
@@ -88,11 +88,62 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    * @OA\Get(
+    *     path="/api/v1/posts/{id}", 
+    *     tags={"Posts"},
+    *     description="Retrieve a Post by ID.",
+    *     operationId="getPostById",
+    *     @OA\Parameter(
+    *         name="ID", 
+    *         in="path", 
+    *         required=true, 
+    *         description="ID of the post to be retrieved.",
+    *         @OA\Schema(
+    *             type="string" 
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Post Successfully listed.",
+    *         @OA\JsonContent(
+    *             type="object",
+    *             @OA\Property(
+    *                 property="id",
+    *                 type="integer",
+    *                 example=1
+    *             ),
+    *             @OA\Property(
+    *                 property="name",
+    *                 type="string",
+    *                 example="Post Name"
+    *             ),
+    *               @OA\Property(
+    *                 property="image",
+    *                 type="file",
+    *                 example="public/image.jpg",
+    *             ),
+    *             @OA\Property(
+    *                 property="description",
+    *                 type="string",
+    *                 example="Post Description"
+    *             ),
+    *            
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Post Not Found"
+    *     ),
+    * )
+    */
+    public function show(int $id)
     {
-        //
+        $post = $this->postService->getPostById($id);  
+
+        return response([
+            'data'     =>  new PostResource($post),
+            'message'  =>  'Post Successfully listed'
+       ], 200);
     }
 
     /**

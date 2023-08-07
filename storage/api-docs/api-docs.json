@@ -11,8 +11,25 @@
         },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "http://localhost:8000"
+        }
+    ],
     "paths": {
         "/api/v1/posts": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "description": "Return posts in descending order",
+                "operationId": "getAllPosts",
+                "responses": {
+                    "200": {
+                        "description": "Posts Successfully listed."
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Posts"
@@ -46,6 +63,59 @@
                 "responses": {
                     "201": {
                         "description": "Post Register Successfully."
+                    }
+                }
+            }
+        },
+        "/api/v1/posts/{id}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "description": "Retrieve a Post by ID.",
+                "operationId": "getPostById",
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "description": "ID of the post to be retrieved.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post Successfully listed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Post Name"
+                                        },
+                                        "image": {
+                                            "type": "file",
+                                            "example": "public/image.jpg"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Post Description"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Post Not Found"
                     }
                 }
             }

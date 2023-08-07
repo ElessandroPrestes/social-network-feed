@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Post;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostRepository implements PostRepositoryInterface
 {
@@ -25,6 +26,21 @@ class PostRepository implements PostRepositoryInterface
     public function createPost(array $post)
     {
         return $this->modelPost->create($post);
+    }
+
+    public function getPostById(int $id)
+    {
+        try {
+            
+            return  $this->modelPost->where('id',$id)->firstOrFail();
+            
+
+        } catch (\Throwable $th ) {
+
+            throw new NotFoundHttpException('Post Not Found');
+
+        }
+      
     }
 
 }

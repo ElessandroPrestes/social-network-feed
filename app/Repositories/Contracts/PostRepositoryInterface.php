@@ -8,4 +8,6 @@ interface PostRepositoryInterface
 
     public function createPost(array $post);
 
+    public function getPostById(int $id);
+
 }
