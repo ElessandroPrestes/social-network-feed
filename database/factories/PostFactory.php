@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,7 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => fake()->uuid(),
+            'uuid' =>Str::uuid(),
             'name' =>fake()->unique()->name(),
             'image' =>fake()->imageUrl(),
             'description' =>fake()->text(),

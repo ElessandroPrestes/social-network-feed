@@ -17,10 +17,10 @@ class PostObserver
 
         $cacheKey = "post:all"; 
         
-        $brands = Post::all(); 
+        $posts = Post::all(); 
 
-        Cache::rememberForever($cacheKey, function () use ($brands) {
-            return $brands;
+        Cache::rememberForever($cacheKey, function () use ($posts) {
+            return $posts;
         });
     }
 
