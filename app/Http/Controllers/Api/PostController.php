@@ -8,15 +8,7 @@ use App\Http\Resources\PostResource;
 use App\Services\PostService;
 use Illuminate\Http\Request;
 
-class PostController extends Controller
-{
-    protected $postService;
-
-    public function __construct(PostService $postService)
-    {
-        $this->postService = $postService;
-    }
-    /**
+     /**
      * @OA\Info(
      *      title="Post API",
      *      version="1.0.0",
@@ -29,9 +21,41 @@ class PostController extends Controller
      *      )
      * )
      */
+class PostController extends Controller
+{
+    protected $postService;
+
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
+
+     /**
+     * @OA\Get(
+     *      path="/api/v1/posts",
+     *      operationId="getAllPosts",
+     *      tags={"Posts"},
+     *      description="Return posts in descending order",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Posts Successfully listed."
+     *       )
+     *     ),
+     *      @OA\Server(
+     *          url="http://localhost:8000",
+     * 
+     *      )
+     *
+     *@return BrandResource[]
+     */
     public function index()
     {
-        //
+        $posts = $this->postService->getAllPostsDesc();
+
+        return response([
+            'data' => PostResource::collection($posts),
+            'message' => 'Posts Successfully listed'
+        ], 200);
     }
 
     /**

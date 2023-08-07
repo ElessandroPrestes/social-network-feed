@@ -36,7 +36,7 @@ class PostRepositoryTest extends TestCase
      * @test
      */
 
-     public function createPost()
+     public function create_post()
     {
         
         $image = imagecreatetruecolor(200, 200);
@@ -58,6 +58,28 @@ class PostRepositoryTest extends TestCase
         $this->assertArrayHasKey('image', $response);
 
         $this->assertEquals($response['name'], $data['name']);
+    }
+
+    /**
+     * @test
+     */
+    public function get_all_posts_desc()
+    {
+        $post1  = Post::factory()->create(['created_at' => now()->subDays(2)]);
+
+        $post2  = Post::factory()->create(['created_at' => now()->subDays(1)]);
+
+        $post3  = Post::factory()->create(['created_at' => now()]);
+
+        $posts = $this->postRepository->getAllPosts();
+
+        $this->assertCount(3, $posts);
+
+        $this->assertEquals($post3->id, $posts[0]->id);
+
+        $this->assertEquals($post2->id, $posts[1]->id);
+
+        $this->assertEquals($post1->id, $posts[2]->id);
     }
    
 }

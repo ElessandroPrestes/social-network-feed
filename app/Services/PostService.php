@@ -13,6 +13,11 @@ class PostService
         $this->postRepository = $postRepository;
     }
 
+    public function getAllPostsDesc()
+    {
+        return $this->postRepository->getAllPostsDesc();
+    }
+
     public function createPost(array $post)
     {
         $imagePath = $post['image']->store('public');
