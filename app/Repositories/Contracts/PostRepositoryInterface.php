@@ -10,4 +10,6 @@ interface PostRepositoryInterface
 
     public function getPostById(int $id);
 
+    public function updatePost(int $id, array $post);
+
 }

@@ -43,4 +43,15 @@ class PostRepository implements PostRepositoryInterface
       
     }
 
+    public function updatePost(int $id, array $post)
+    {
+        $edit = $this->getPostById($id);
+
+        Cache::forget('post:all');
+
+        return $edit->update($post);
+
+    }
+
+
 }

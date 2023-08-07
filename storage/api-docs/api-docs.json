@@ -11,24 +11,50 @@
         },
         "version": "1.0.0"
     },
-    "servers": [
-        {
-            "url": "http://localhost:8000"
-        }
-    ],
     "paths": {
         "/api/v1/posts": {
             "get": {
                 "tags": [
                     "Posts"
                 ],
+                "summary": "Get all posts",
                 "description": "Return posts in descending order",
                 "operationId": "getAllPosts",
                 "responses": {
                     "200": {
-                        "description": "Posts Successfully listed."
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
-                }
+                },
+                "servers": [
+                    {
+                        "url": "http://localhost:8000"
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -48,7 +74,7 @@
                                     },
                                     "image": {
                                         "type": "string",
-                                        "example": "https://example.com/thanos.jpg"
+                                        "example": "public/thanos.jpg"
                                     },
                                     "description": {
                                         "type": "string",
@@ -62,7 +88,32 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Post Register Successfully."
+                        "description": "Post Register Successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -91,22 +142,96 @@
                         "content": {
                             "application/json": {
                                 "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Post Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
                                     "properties": {
-                                        "id": {
+                                        "message": {
                                             "type": "integer",
-                                            "example": 1
-                                        },
-                                        "name": {
+                                            "example": 404
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Posts"
+                ],
+                "description": "Update Post by ID",
+                "operationId": "updatePost",
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "description": "Post ID.",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostResource"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post Updated Successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
                                             "type": "string",
-                                            "example": "Post Name"
-                                        },
-                                        "image": {
-                                            "type": "file",
-                                            "example": "public/image.jpg"
-                                        },
-                                        "description": {
-                                            "type": "string",
-                                            "example": "Post Description"
+                                            "example": "Post Updated Successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "402": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -115,9 +240,55 @@
                         }
                     },
                     "404": {
-                        "description": "Post Not Found"
+                        "description": "Post Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "integer",
+                                            "example": 404
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PostResource": {
+                "title": "PostResource",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
             }
         }
     }

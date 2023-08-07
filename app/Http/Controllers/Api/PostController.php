@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Services\PostService;
 use Illuminate\Http\Request;
@@ -30,23 +31,33 @@ class PostController extends Controller
         $this->postService = $postService;
     }
 
-     /**
+    /**
      * @OA\Get(
      *      path="/api/v1/posts",
      *      operationId="getAllPosts",
      *      tags={"Posts"},
+     *      summary="Get all posts",
      *      description="Return posts in descending order",
      *      @OA\Response(
      *          response=200,
-     *          description="Posts Successfully listed."
-     *       )
-     *     ),
+     *          description="Successful operation",
+     *          @OA\JsonContent(
+     *              type="array",
+     *              @OA\Items(ref="#/components/schemas/PostResource")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad request",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="message", type="string")
+     *          )
+     *      ),
      *      @OA\Server(
-     *          url="http://localhost:8000",
-     * 
+     *          url="http://localhost:8000"
      *      )
-     *
-     *@return PostResource[]
+     * )
      */
     public function index()
     {
@@ -66,15 +77,26 @@ class PostController extends Controller
     *      @OA\RequestBody(
     *          required=true,
     *          @OA\JsonContent(
-    *          type="object",
-    *          @OA\Property(property="name", type="string", example="Thanos"),
-    *          @OA\Property(property="image", type="string", example="https://example.com/thanos.jpg"),
-    *          @OA\Property(property="description", type="string", example="A powerful villain obsessed with balance in the universe."),
+    *               type="object",
+    *               @OA\Property(property="name", type="string", example="Thanos"),
+    *               @OA\Property(property="image", type="string", example="public/thanos.jpg"),
+    *               @OA\Property(property="description", type="string", example="A powerful villain obsessed with balance in the universe."),
     *       )
     *     ),
-    *      @OA\Response(
-    *          response=201, description="Post Register Successfully."
-    *      )
+    *       @OA\Response(
+    *          response=201,description="Post Register Successfully.",
+    *           @OA\JsonContent(
+    *              type="array",
+    *              @OA\Items(ref="#/components/schemas/PostResource")
+    *          )
+    *      ),
+    *       @OA\Response(
+    *          response=422,description="Unprocessable Entity",
+    *          @OA\JsonContent(
+    *               type="object",
+    *              @OA\Property(property="message", type="string")
+    *           )
+    *       ),
     *     ),
     */
     public function store(StorePostRequest $request)
@@ -106,33 +128,16 @@ class PostController extends Controller
     *         response=200,
     *         description="Post Successfully listed.",
     *         @OA\JsonContent(
-    *             type="object",
-    *             @OA\Property(
-    *                 property="id",
-    *                 type="integer",
-    *                 example=1
-    *             ),
-    *             @OA\Property(
-    *                 property="name",
-    *                 type="string",
-    *                 example="Post Name"
-    *             ),
-    *               @OA\Property(
-    *                 property="image",
-    *                 type="file",
-    *                 example="public/image.jpg",
-    *             ),
-    *             @OA\Property(
-    *                 property="description",
-    *                 type="string",
-    *                 example="Post Description"
-    *             ),
-    *            
+    *            type="array",
+    *              @OA\Items(ref="#/components/schemas/PostResource")
     *         )
     *     ),
     *     @OA\Response(
-    *         response=404,
-    *         description="Post Not Found"
+    *         response=404,description="Post Not Found",
+    *          @OA\JsonContent(
+    *              type="object",
+    *              @OA\Property(property="message", type="integer", example=404)
+    *          )
     *     ),
     * )
     */
@@ -146,12 +151,64 @@ class PostController extends Controller
        ], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
+     /**
+     * @OA\Put(
+     *     path="/api/v1/posts/{id}",
+     *     tags={"Posts"},
+     *     description="Update Post by ID",
+     *     operationId="updatePost",
+     *     @OA\Parameter(
+     *         name="ID", 
+     *         in="path", 
+     *         required=true, 
+     *         description="Post ID."
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *              ref="#/components/schemas/PostResource"
+     *          )
+     *     ),
+     *     @OA\Response(
+     *         response=200,description="Post Updated Successfully.",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",type="string",example="Post Updated Successfully."
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response=422,description="Unprocessable Entity",
+     *          @OA\JsonContent(
+     *              type="object",
+     *                  @OA\Property(property="message", type="string")
+     *          )
+     *       ),
+     *      @OA\Response(
+     *         response=402,description="Bad request",
+     *          @OA\JsonContent(
+     *              type="object",
+     *                  @OA\Property(property="message", type="string")
+     *          )
+     *     ),
+     *     @OA\Response(
+     *         response=404,description="Post Not Found",
+     *          @OA\JsonContent(
+     *              type="object",
+     *                  @OA\Property(property="message", type="integer", example=404)
+     *          )
+     *     ),
+     * )
      */
-    public function update(Request $request, string $id)
+   
+    public function update(UpdatePostRequest $request, int $id)
     {
-        //
+        $this->postService->updatePost($id, $request->validated());
+
+        return response([
+            'message' => 'Post Updated Successfully'
+        ], 200);
     }
 
     /**

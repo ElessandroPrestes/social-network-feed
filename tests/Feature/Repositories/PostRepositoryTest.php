@@ -109,5 +109,24 @@ class PostRepositoryTest extends TestCase
   
           $this->assertIsObject($response);
       }
+
+      /**
+      * @test
+      */
+      public function update_post()
+    {
+        $post = Post::factory()->create();
+
+        $response = $this->postRepository->getPostById($post->id);
+
+        $this->assertNotNull($response);
+
+        $this->assertIsObject($response);
+
+        $this->assertDatabaseHas('posts', [
+            'id' => $post->id,
+        ]);
+    }
+
    
 }

@@ -32,4 +32,9 @@ class PostService
         return $this->postRepository->getPostById($id);
     }
 
+    public function updatePost(int $id, array $post)
+    {
+        return $this->postRepository->updatePost($id, $post);
+    }
+
 }
