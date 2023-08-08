@@ -17,7 +17,6 @@
                 "tags": [
                     "Posts"
                 ],
-                "summary": "Get all posts",
                 "description": "Return posts in descending order",
                 "operationId": "getAllPosts",
                 "responses": {
@@ -41,7 +40,8 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Bad Request"
                                         }
                                     },
                                     "type": "object"
@@ -107,7 +107,8 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Unprocessable Entity"
                                         }
                                     },
                                     "type": "object"
@@ -157,8 +158,8 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "integer",
-                                            "example": 404
+                                            "type": "string",
+                                            "example": "Post Not Found"
                                         }
                                     },
                                     "type": "object"
@@ -216,7 +217,8 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Unprocessable Entity"
                                         }
                                     },
                                     "type": "object"
@@ -231,7 +233,8 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Bad request"
                                         }
                                     },
                                     "type": "object"
@@ -246,8 +249,57 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "integer",
-                                            "example": 404
+                                            "type": "string",
+                                            "example": "Post Not Found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Posts"
+                ],
+                "description": "Delete a post by ID.",
+                "operationId": "deletePost",
+                "parameters": [
+                    {
+                        "name": "ID",
+                        "in": "path",
+                        "description": "ID of the Post to be deleted.",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post successfully deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Post Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post Not Found"
                                         }
                                     },
                                     "type": "object"

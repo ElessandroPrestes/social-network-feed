@@ -10,6 +10,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Tests\TestCase;
 
 class PostRepositoryTest extends TestCase
@@ -126,6 +127,35 @@ class PostRepositoryTest extends TestCase
         $this->assertDatabaseHas('posts', [
             'id' => $post->id,
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function delete_post()
+    {
+        $post = Post::factory()->create();
+
+        $deleted = $this->postRepository->deletePost($post->id);
+
+        $this->assertTrue($deleted);
+
+        $this->assertDatabaseMissing('posts', [
+            $deleted == $post->id 
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function delete_brand_not_found()
+    {
+        $fakeId = '9999';
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $this->postRepository->getPostById($fakeId);
+
     }
 
    

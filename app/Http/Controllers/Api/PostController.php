@@ -36,7 +36,6 @@ class PostController extends Controller
      *      path="/api/v1/posts",
      *      operationId="getAllPosts",
      *      tags={"Posts"},
-     *      summary="Get all posts",
      *      description="Return posts in descending order",
      *      @OA\Response(
      *          response=200,
@@ -51,7 +50,7 @@ class PostController extends Controller
      *          description="Bad request",
      *          @OA\JsonContent(
      *              type="object",
-     *              @OA\Property(property="message", type="string")
+     *              @OA\Property(property="message", type="string", example="Bad Request")
      *          )
      *      ),
      *      @OA\Server(
@@ -94,7 +93,7 @@ class PostController extends Controller
     *          response=422,description="Unprocessable Entity",
     *          @OA\JsonContent(
     *               type="object",
-    *              @OA\Property(property="message", type="string")
+    *              @OA\Property(property="message", type="string", example="Unprocessable Entity")
     *           )
     *       ),
     *     ),
@@ -136,7 +135,7 @@ class PostController extends Controller
     *         response=404,description="Post Not Found",
     *          @OA\JsonContent(
     *              type="object",
-    *              @OA\Property(property="message", type="integer", example=404)
+    *              @OA\Property(property="message", type="string", example="Post Not Found")
     *          )
     *     ),
     * )
@@ -182,21 +181,21 @@ class PostController extends Controller
      *          response=422,description="Unprocessable Entity",
      *          @OA\JsonContent(
      *              type="object",
-     *                  @OA\Property(property="message", type="string")
+     *                  @OA\Property(property="message", type="string", example="Unprocessable Entity")
      *          )
      *       ),
      *      @OA\Response(
      *         response=402,description="Bad request",
      *          @OA\JsonContent(
      *              type="object",
-     *                  @OA\Property(property="message", type="string")
+     *                  @OA\Property(property="message", type="string", example="Bad request")
      *          )
      *     ),
      *     @OA\Response(
      *         response=404,description="Post Not Found",
      *          @OA\JsonContent(
      *              type="object",
-     *                  @OA\Property(property="message", type="integer", example=404)
+     *                  @OA\Property(property="message", type="string", example="Post Not Found")
      *          )
      *     ),
      * )
@@ -212,10 +211,41 @@ class PostController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/v1/posts/{id}",
+     *     tags={"Posts"},
+     *     description="Delete a post by ID.",
+     *     operationId="deletePost",
+     *     @OA\Parameter(
+     *         name="ID", 
+     *         in="path", 
+     *         required=true, 
+     *         description="ID of the Post to be deleted.",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Post successfully deleted",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",type="string",example="Post successfully deleted"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Post Not Found",
+     *          @OA\JsonContent(
+     *              type="object",
+     *                  @OA\Property(property="message", type="string", example="Post Not Found")
+     *          )
+     *     ),
+     * )
      */
     public function destroy(string $id)
     {
-        //
+        $this->postService->deletePost($id);
+
+        return response([], 204);
     }
 }

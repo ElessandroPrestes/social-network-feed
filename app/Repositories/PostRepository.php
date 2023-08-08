@@ -53,5 +53,15 @@ class PostRepository implements PostRepositoryInterface
 
     }
 
+    public function deletePost(int $id)
+    {
+        $delete = $this->getPostById($id);
+
+        Cache::forget('post:all');
+        
+        return $delete->delete();
+
+    }
+
 
 }
